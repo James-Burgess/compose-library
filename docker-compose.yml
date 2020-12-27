@@ -1,0 +1,56 @@
+version: "3"
+services:
+  transmission:
+      image: ghcr.io/linuxserver/transmission
+      container_name: transmission
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=Europe/London
+        # - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
+        # - USER=username #optional
+        # - PASS=password #optional
+      volumes:
+        - ./data/transmission/config:/config
+        - ./data/media/downloads:/downloads
+        - ./data/transmission/watch:/watch
+      ports:
+        - 8084:9091
+        - 51413:51413
+        - 51413:51413/udp
+      restart: unless-stopped
+
+  droppy:
+    container_name: droppy
+    image: silverwind/droppy
+    ports:
+      - 8083:8989
+    volumes:
+      - ./data/droppy/config:/config
+      - ./data:/files
+    restart: unless-stopped
+
+  samba:
+    image: dperson/samba
+    environment:
+      TZ: 'EST5EDT'
+    networks:
+      - default
+    ports:
+      - "137:137/udp"
+      - "138:138/udp"
+      - "139:139/tcp"
+      - "445:445/tcp"
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - /mnt:/mnt:z
+      - ./data:/mnt2:z
+    command: '-s "mnt;/mnt;yes;no;no;jimmy" -s "Pirate Box;/mnt2;yes;no;no;jimmy" -u "jimmy;jimmy" -p'
+
+networks:
+  default:

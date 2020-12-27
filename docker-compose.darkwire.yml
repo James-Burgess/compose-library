@@ -1,0 +1,13 @@
+  redis:
+    image: redis:6.0.6
+    networks:
+      - db
+
+  darkwire.io:
+    image: darkwire.io:latest
+    networks:
+      - db
+    ports:
+      - 3001:3001
+networks:
+  db:

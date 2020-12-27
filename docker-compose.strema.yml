@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+    streama:
+        image: 'gkiko/streama:v1.6.0-FINAL'
+        working_dir: '/app'
+        entrypoint: 'java'
+        command: ["-Dgrails.env=mysql", "-jar", "streama.war"]
+        hostname: streama
+        ports:
+            - 8080:8080
+        environment:
+            - ACTIVE_PROFILE=mysql
+            - MYSQL_HOST=mysql
+            - MYSQL_DATABASE=streama
+            - MYSQL_USER=streama
+            - MYSQL_PASSWORD=streama_password
+        restart: always
+        volumes:
+            - ./data:/data/streama
+        links:
+            - mysql
+        depends_on:
+            - mysql
+    mysql:
+        image: 'mariadb:10'
+        hostname: mysql
+        restart: always
+        volumes:
+            - ./mysql_data:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=password
+            - MYSQL_DATABASE=streama
+            - MYSQL_USER=streama
+            - MYSQL_PASSWORD=streama_password
+        expose:
+            - 3306
