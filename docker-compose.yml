@@ -7,9 +7,6 @@ services:
         - PUID=1000
         - PGID=1000
         - TZ=Europe/London
-        # - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
-        # - USER=username #optional
-        # - PASS=password #optional
       volumes:
         - ./data/transmission/config:/config
         - ./data/media/downloads:/downloads
@@ -50,7 +47,7 @@ services:
     volumes:
       - /mnt:/mnt:z
       - ./data:/mnt2:z
-    command: '-s "mnt;/mnt;yes;no;no;jimmy" -s "Pirate Box;/mnt2;yes;no;no;jimmy" -u "jimmy;jimmy" -p'
+    command: '-s "mnt;/mnt;yes;no;no;jimmy;jimmy;jimmy" -s "Pirate Box;/mnt2;yes;no;no;jimmy;jimmy" -u "jimmy;jimmy" -w "DEFAULT" -p'
 
 networks:
   default:
