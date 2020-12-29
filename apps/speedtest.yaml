@@ -1,0 +1,7 @@
+version: '3'
+services:
+  speedtest:
+    container_name: speetest
+    image: roest/docker-speedtest-analyser
+    ports:
+    - 8081:80
