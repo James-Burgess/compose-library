@@ -39,5 +39,29 @@ services:
       - MYSQL_HOST=localhost
     restart: unless-stopped
 
+    #
+    # nc:
+    #   image: nextcloud:apache
+    #   environment:
+    #     - POSTGRES_HOST=db
+    #     - POSTGRES_PASSWORD=nextcloud
+    #     - POSTGRES_DB=nextcloud
+    #     - POSTGRES_USER=nextcloud
+    #   ports:
+    #     - 80:80
+    #   restart: always
+    #   volumes:
+    #     - /mnt/hdd1/data/nc_data:/var/www/html
+    #     - /mnt/:/mnt/host
+    # db:
+    #   image: postgres:alpine
+    #   environment:
+    #     - POSTGRES_PASSWORD=nextcloud
+    #     - POSTGRES_DB=nextcloud
+    #     - POSTGRES_USER=nextcloud
+    #   restart: always
+    #   volumes:
+    #     - /mnt/hdd1/data/db_data:/var/lib/postgresql/data
+
 networks:
   internal_network:

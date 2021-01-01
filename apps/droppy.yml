@@ -1,0 +1,9 @@
+  droppy:
+    container_name: droppy
+    image: silverwind/droppy
+    ports:
+      - 8083:8989
+    volumes:
+      - ./data/droppy/config:/config
+      - /mnt/patriot:/files
+    restart: unless-stopped

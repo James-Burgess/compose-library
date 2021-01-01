@@ -8,23 +8,35 @@ services:
         - PGID=1000
         - TZ=Europe/London
       volumes:
-        - ./data/transmission/config:/config
-        - ./data/media/downloads:/downloads
-        - ./data/transmission/watch:/watch
+        - /mnt/hdd1/data/transmission/config:/config
+        - /mnt/hdd1/data/media/downloads:/downloads
+        - /mnt/hdd1/data/transmission/watch:/watch
       ports:
         - 8084:9091
         - 51413:51413
         - 51413:51413/udp
       restart: unless-stopped
 
-  droppy:
-    container_name: droppy
-    image: silverwind/droppy
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
     ports:
-      - 8083:8989
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: 'America/Chicago'
+      # WEBPASSWORD: 'set a secure password here or it will be random'
+    # Volumes store your data between container upgrades
     volumes:
-      - ./data/droppy/config:/config
-      - /mnt/patriot:/files
+      - './data/etc-pihole/:/etc/pihole/'
+      - './data/etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
     restart: unless-stopped
 
   samba:
@@ -45,33 +57,8 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - /mnt/:/mnt:z
-      - ./data/:/mnt2:z
-    command: '-s "mnt;/mnt;yes;no;no;jimmy;jimmy;jimmy" -s "Pirate Box;/mnt2;yes;no;no;jimmy;jimmy" -u "jimmy;jimmy" -w "DEFAULT"'
-
-  nc:
-    image: nextcloud:apache
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_PASSWORD=nextcloud
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=nextcloud
-    ports:
-      - 80:80
-    restart: always
-    volumes:
-      - ./data/nc_data:/var/www/html
-      - /mnt/:/mnt/host
-  db:
-    image: postgres:alpine
-    environment:
-      - POSTGRES_PASSWORD=nextcloud
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=nextcloud
-    restart: always
-    volumes:
-      - ./data/db_data:/var/lib/postgresql/data
-
+      - /mnt/hdd1:/mnt:z
+    command: '-s "mnt;/mnt;yes;no;no;jimmy;jimmy;jimmy" -u "jimmy;jimmy" -w "DEFAULT"'
 
 networks:
   default:
